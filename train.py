@@ -1,4 +1,5 @@
 import contextlib
+import sys
 import time
 
 import torch
@@ -60,8 +61,6 @@ def timeit(desc):
 
 
 def _main():
-    torch.set_num_threads(12)
-
     # Download training data from open datasets.
     training_data = datasets.FashionMNIST(
         root="data",
@@ -92,6 +91,8 @@ def _main():
     # Get cpu or gpu device for training.
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Using {device} device")
+    if device == "cpu":
+        torch.set_num_threads(12)
 
     model = NeuralNetwork().to(device)
     print(model)
